@@ -7,7 +7,7 @@ type Service interface {
 }
 
 type Book struct {
-    Name string
+    Title string `json:"title"`
 }
 
 type bookSvc struct {}
