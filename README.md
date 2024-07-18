@@ -6,7 +6,7 @@ An api for managing books, book clubs, and their members.
 
 Use the following command to start the API:
 
-```go
+```bash
 go run ./cmd/main.go
 ```
 
@@ -18,3 +18,13 @@ Or use the start script:
 chmod +x ./start.sh
 ./start.sh
 ```
+
+## Using NixOS
+
+There is a flake setup for this repo. To use it run the following command:
+
+```bash
+nix develop
+```
+
+
