@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	bookSvc "github.com/King-Rullmann-Book-Club/books-api/pkg/v1/service/books"
+	"github.com/King-Rullmann-Book-Club/books-api/pkg/v1/service/storage"
 	"github.com/King-Rullmann-Book-Club/books-api/pkg/v1/transport/books"
 
 	"github.com/go-kit/log"
@@ -18,6 +19,7 @@ func main() {
 	//		httpAddr = flag.String("http.addr", ":8080", "HTTP listen address")
 	//	)
 	//	flag.Parse()
+	defer storage.NewTransactor().Close()
 
 	var logger log.Logger
 	{
@@ -50,5 +52,4 @@ func main() {
 	}()
 
 	logger.Log("exit", <-errs)
-	bookSvc.NewTransactor().Close()
 }

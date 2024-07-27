@@ -2,8 +2,9 @@ package books
 
 import (
 	"context"
-	"log"
 	"strconv"
+
+	"github.com/King-Rullmann-Book-Club/books-api/pkg/v1/service/storage"
 )
 
 // GetBook returns the details of a given book ID.
@@ -14,22 +15,18 @@ func (s *bookSvc) GetBook(ctx context.Context, id string) (Book, error) {
 		println("finding %v, %v", id, err)
 		return Book{}, err
 	}
-
-	t := NewTransactor()
-	return t.GetBookById(uint(rid))
+	return getBookById(uint(rid))
 }
 
 // GetBook returns the details of a given book ID.
-func (s *transactor) GetBookById(rid uint) (Book, error) {
-	row := s.db.QueryRow(`select id, title from books where id = ? limit 1;`, rid)
-	println("finding", rid)
-
+func getBookById(rid uint) (Book, error) {
 	var id uint
 	var title string
-	err := row.Scan(&id, &title)
-	if err != nil {
-		log.Default().Printf("error %v, %v", rid, err)
+	t := storage.NewTransactor()
+	err := t.GetRecordById("books", rid, []string{"id", "title"}, &id, &title)
 
+	if err != nil {
+		println("error %v, %v", rid, err)
 		return Book{}, err
 	}
 	return Book{Id: id, Title: title}, nil

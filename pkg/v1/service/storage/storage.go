@@ -1,14 +1,20 @@
-package books
+package storage
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
+	"regexp"
+	"strings"
+
+	// needed so that driver is installed
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 type Transactor interface {
-	GetBookById(id uint) (Book, error)
+	// columnNames are columns to be retrieved, columnDests are output values that the column results are put into
+	GetRecordById(tableName string, id uint, columnNames []string, columnDests ...any) error
 
 	Close()
 }
@@ -16,11 +22,41 @@ type Transactor interface {
 var t Transactor
 
 type transactor struct {
-	db *sql.DB
+	db         *sql.DB
+	tableRegex *regexp.Regexp
+}
+
+type fieldNameError struct {
+	fieldName string
+}
+
+func (e fieldNameError) Error() string {
+	return fmt.Sprintf("%s is a invalid field name", e.fieldName)
 }
 
 func (s *transactor) Close() {
 	s.db.Close()
+}
+
+func (s *transactor) GetRecordById(tableName string, id uint, columnNames []string, columnDests ...any) error {
+	// crude SQL injection protection
+	if !s.tableRegex.Match([]byte(tableName)) {
+		return fieldNameError{tableName}
+	}
+	var columnQs []string
+	for _, x := range columnNames {
+		if !s.tableRegex.Match([]byte(x)) {
+			return fieldNameError{x}
+		}
+		columnQs = append(columnQs, x)
+	}
+	row := s.db.QueryRow(`select `+strings.Join(columnQs, ", ")+` from `+tableName+`  where id = ? limit 1;`, id)
+	err := row.Scan(columnDests...)
+	if err != nil {
+		log.Default().Printf("GetRecordById erro %v", err)
+		return err
+	}
+	return nil
 }
 
 func buildTransactor() Transactor {
@@ -83,7 +119,7 @@ func buildTransactor() Transactor {
 	if err != nil {
 		log.Fatalf("Could not run migrations %v", err)
 	}
-	return &transactor{db}
+	return &transactor{db, regexp.MustCompile("[a-zA-Z0-9_]+")}
 }
 
 func NewTransactor() Transactor {
