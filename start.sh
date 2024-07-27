@@ -1,3 +1,2 @@
 #!/bin/sh
-
-go run ./cmd/main.go
+CGO_ENABLED=1 go run ./cmd/main.go
