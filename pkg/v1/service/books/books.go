@@ -2,6 +2,7 @@ package books
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 
 	"github.com/King-Rullmann-Book-Club/books-api/pkg/v1/service/storage"
@@ -12,7 +13,7 @@ func (s *bookSvc) GetBook(ctx context.Context, id string) (Book, error) {
 	rid, err := strconv.ParseUint(id, 10, 0)
 
 	if err != nil {
-		println("finding %v, %v", id, err)
+		fmt.Errorf("finding %v, %v", id, err)
 		return Book{}, err
 	}
 	return getBookById(uint(rid))
@@ -26,7 +27,7 @@ func getBookById(rid uint) (Book, error) {
 	err := t.GetRecordById("books", rid, []string{"id", "title"}, &id, &title)
 
 	if err != nil {
-		println("error %v, %v", rid, err)
+		fmt.Errorf("error %v, %v", rid, err)
 		return Book{}, err
 	}
 	return Book{Id: id, Title: title}, nil
