@@ -1,9 +1,9 @@
 package books
 
 import (
-    "context"
-    "github.com/King-Rullmann-Book-Club/books-api/pkg/v1/service/books"
-    "github.com/go-kit/kit/endpoint"
+	"context"
+	"github.com/King-Rullmann-Book-Club/books-api/pkg/v1/service/books"
+	"github.com/go-kit/kit/endpoint"
 )
 
 // COPIED FROM GO-KIT EXAMPLES:
@@ -22,21 +22,21 @@ import (
 // construct individual endpoints using transport/http.NewClient, combine them
 // into an Endpoints, and return it to the caller as a Service.
 type Endpoints struct {
-    GetBook endpoint.Endpoint
+	GetBook endpoint.Endpoint
 }
 
-// MakeEndpoints returns a list of available service Endpoints. 
+// MakeEndpoints returns a list of available service Endpoints.
 func MakeEndpoints(s books.Service) *Endpoints {
-    return &Endpoints{
-        GetBook: makeGetBookEndpoint(s),
-    }
+	return &Endpoints{
+		GetBook: makeGetBookEndpoint(s),
+	}
 }
 
-// makeGetBookEndpoint formats the get book response. 
+// makeGetBookEndpoint formats the get book response.
 func makeGetBookEndpoint(s books.Service) endpoint.Endpoint {
-    return func(ctx context.Context, request interface{}) (interface{}, error) {
-        req := request.(GetBookRequest)
-        b, err := s.GetBook(ctx, req.ID)
-        return GetBookResponse{Book: b, Err: err}, nil
-    }
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(GetBookRequest)
+		b, err := s.GetBook(ctx, req.ID)
+		return GetBookResponse{Book: b, Err: err}, nil
+	}
 }
