@@ -3,15 +3,16 @@ package books
 import "context"
 
 type Service interface {
-    GetBook(ctx context.Context, id string) (Book, error)
+	GetBook(ctx context.Context, id string) (Book, error)
 }
 
 type Book struct {
-    Title string `json:"title"`
+	Id    uint   `json:"id"`
+	Title string `json:"title"`
 }
 
-type bookSvc struct {}
+type bookSvc struct{}
 
 func NewService() Service {
-    return &bookSvc{}
+	return &bookSvc{}
 }
