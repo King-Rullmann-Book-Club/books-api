@@ -8,7 +8,7 @@ import (
 	"syscall"
 
 	bookSvc "github.com/King-Rullmann-Book-Club/books-api/pkg/v1/service/books"
-	"github.com/King-Rullmann-Book-Club/books-api/pkg/v1/service/storage"
+	"github.com/King-Rullmann-Book-Club/books-api/pkg/storage"
 	"github.com/King-Rullmann-Book-Club/books-api/pkg/v1/transport/books"
 
 	"github.com/go-kit/log"

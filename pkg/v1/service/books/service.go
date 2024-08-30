@@ -3,7 +3,7 @@ package books
 import (
 	"context"
 
-	"github.com/King-Rullmann-Book-Club/books-api/pkg/v1/service/storage"
+	"github.com/King-Rullmann-Book-Club/books-api/pkg/storage"
 )
 
 type Service interface {
