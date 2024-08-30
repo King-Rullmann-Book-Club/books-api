@@ -1,9 +1,13 @@
 package books
 
-import "context"
+import (
+	"context"
+
+	"github.com/King-Rullmann-Book-Club/books-api/pkg/v1/service/storage"
+)
 
 type Service interface {
-	GetBook(ctx context.Context, id string) (Book, error)
+	GetBook(ctx context.Context, id string) (*Book, error)
 }
 
 type Book struct {
@@ -11,8 +15,10 @@ type Book struct {
 	Title string `json:"title"`
 }
 
-type bookSvc struct{}
+type bookSvc struct {
+    db storage.Transactor
+}
 
-func NewService() Service {
-	return &bookSvc{}
+func NewService(db storage.Transactor) Service {
+	return &bookSvc{db}
 }

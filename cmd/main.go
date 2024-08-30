@@ -28,9 +28,11 @@ func main() {
 		logger = log.With(logger, "caller", log.DefaultCaller)
 	}
 
+    t := storage.NewTransactor()
+
 	var s bookSvc.Service
 	{
-		s = bookSvc.NewService()
+		s = bookSvc.NewService(t)
 		//		s = profilesvc.LoggingMiddleware(logger)(s)
 	}
 
