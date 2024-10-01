@@ -8,7 +8,7 @@ import (
 	"syscall"
 
 	bookSvc "github.com/King-Rullmann-Book-Club/books-api/pkg/v1/service/books"
-	"github.com/King-Rullmann-Book-Club/books-api/pkg/v1/service/storage"
+	"github.com/King-Rullmann-Book-Club/books-api/pkg/storage"
 	"github.com/King-Rullmann-Book-Club/books-api/pkg/v1/transport/books"
 
 	"github.com/go-kit/log"
@@ -28,9 +28,11 @@ func main() {
 		logger = log.With(logger, "caller", log.DefaultCaller)
 	}
 
+    t := storage.NewTransactor()
+
 	var s bookSvc.Service
 	{
-		s = bookSvc.NewService()
+		s = bookSvc.NewService(t)
 		//		s = profilesvc.LoggingMiddleware(logger)(s)
 	}
 

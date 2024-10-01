@@ -19,8 +19,6 @@ type Transactor interface {
 	Close()
 }
 
-var t Transactor
-
 type transactor struct {
 	db         *sql.DB
 	tableRegex *regexp.Regexp
@@ -59,7 +57,7 @@ func (s *transactor) GetRecordById(tableName string, id uint, columnNames []stri
 	return nil
 }
 
-func buildTransactor() Transactor {
+func NewTransactor() Transactor {
 	db, err := sql.Open("sqlite3", "./books.db")
 	if err != nil {
 		log.Fatal(err)
@@ -122,17 +120,6 @@ func buildTransactor() Transactor {
 	return &transactor{db, regexp.MustCompile("[a-zA-Z0-9_]+")}
 }
 
-func NewTransactor() Transactor {
-	if t != nil {
-		return t
-	}
-	t = buildTransactor()
-	return t
-}
-
-func CloseTransactor() {
-	if t != nil {
-		t.Close()
-	}
-	t = nil
+func CloseTransactor(t Transactor) {
+    t.Close()
 }
