@@ -24,3 +24,22 @@ func (s *bookSvc) GetBook(ctx context.Context, id string) (*Book, error) {
 	return &Book{returnedId, title}, nil
 }
 
+// ListBooks returns all the books in the database (v1)
+func (s *bookSvc) ListBooks(ctx context.Context) ([]Book, error) {
+    books, err := s.db.GetRecords("books", []string{"id", "title"})
+    if err != nil {
+        return nil, err
+    } 
+
+    var bookList []Book
+    for books.Next() {
+        var id uint
+        var title string
+        if err := books.Scan(&id, &title); err != nil {
+            return nil, err
+        }
+        bookList = append(bookList, Book{id, title})
+    }
+   
+    return bookList, nil
+}

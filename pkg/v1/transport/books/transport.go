@@ -21,8 +21,16 @@ func NewTransport(s svc.Service) http.Handler {
 	e := ep.MakeEndpoints(s)
 	options := []httptransport.ServerOption{}
 
-	// GET /books/:id                 Get a book by ID
 
+    // GET /books List all books
+    r.Methods(http.MethodGet).Path("/books").Handler(httptransport.NewServer(
+        e.ListBooks,
+        decodeListBooksRequest,
+        encodeResponse,
+        options...,
+    ))
+
+	// GET /books/:id Get a book by ID
 	r.Methods(http.MethodGet).Path("/books/{id}").Handler(httptransport.NewServer(
 		e.GetBook,
 		decodeGetBookRequest,
@@ -41,6 +49,11 @@ func decodeGetBookRequest(_ context.Context, r *http.Request) (request interface
 		return nil, errors.New("Unable to get parameter, bad route")
 	}
 	return ep.GetBookRequest{ID: id}, nil
+}
+
+// decodeListBooksRequest decodes a request with the following format: GET /books
+func decodeListBooksRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
+	return ep.GetBookRequest{}, nil
 }
 
 // errorer is implemented by all concrete response types that may contain

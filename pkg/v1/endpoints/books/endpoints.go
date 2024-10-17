@@ -24,12 +24,14 @@ import (
 // into an Endpoints, and return it to the caller as a Service.
 type Endpoints struct {
 	GetBook endpoint.Endpoint
+    ListBooks endpoint.Endpoint
 }
 
 // MakeEndpoints returns a list of available service Endpoints.
 func MakeEndpoints(s books.Service) *Endpoints {
 	return &Endpoints{
 		GetBook: makeGetBookEndpoint(s),
+        ListBooks: makeListBooksEndpoint(s),
 	}
 }
 
@@ -39,5 +41,13 @@ func makeGetBookEndpoint(s books.Service) endpoint.Endpoint {
 		req := request.(GetBookRequest)
 		b, err := s.GetBook(ctx, req.ID)
 		return GetBookResponse{Book: *b, Err: err}, nil
+	}
+}
+
+// makeListBooksEndpoint formats the list books response.
+func makeListBooksEndpoint(s books.Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		b, err := s.ListBooks(ctx)
+		return ListBooksResponse{Books: b, Err: err}, nil
 	}
 }
