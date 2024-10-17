@@ -15,6 +15,7 @@ import (
 type Transactor interface {
 	// columnNames are columns to be retrieved, columnDests are output values that the column results are put into
 	GetRecordById(tableName string, id uint, columnNames []string, columnDests ...any) error
+    GetRecords(tableName string, columnNames []string) (*sql.Rows, error)
 
 	Close()
 }
@@ -55,6 +56,24 @@ func (s *transactor) GetRecordById(tableName string, id uint, columnNames []stri
 		return err
 	}
 	return nil
+}
+
+func (s *transactor) GetRecords(tableName string, columnNames []string) (*sql.Rows, error) {
+    var columnQs []string
+    for _, x := range columnNames {
+        if !s.tableRegex.Match([]byte(x)) {
+            return nil, fieldNameError{x}
+        }
+        columnQs = append(columnQs, x)
+    }
+
+    rows, err := s.db.Query(`select ` + strings.Join(columnQs, ", ") + ` from ` + tableName)
+    if err != nil {
+        log.Default().Printf("GetRecords error %v", err)
+        return nil, err
+    }
+
+    return rows, nil
 }
 
 func NewTransactor() Transactor {

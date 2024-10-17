@@ -8,6 +8,7 @@ import (
 
 type Service interface {
 	GetBook(ctx context.Context, id string) (*Book, error)
+    ListBooks(ctx context.Context) ([]Book, error)
 }
 
 type Book struct {

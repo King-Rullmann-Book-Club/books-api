@@ -12,3 +12,10 @@ type GetBookResponse struct {
 	Book books.Book `json:"book,omitempty"`
 	Err  error      `json:"err,omitempty"`
 }
+
+type ListBooksRequest struct{}
+
+type ListBooksResponse struct {
+    Books []books.Book `json:"books,omitempty"`
+    Err   error        `json:"err,omitempty"`
+}
