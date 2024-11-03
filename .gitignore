@@ -1,2 +1,6 @@
 # ignore build files
 main
+
+# ignore local dbs
+books.db
+./db-data/books.db

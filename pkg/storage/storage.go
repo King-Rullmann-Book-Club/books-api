@@ -58,10 +58,11 @@ func (s *transactor) GetRecordById(tableName string, id uint, columnNames []stri
 }
 
 func NewTransactor() Transactor {
-	db, err := sql.Open("sqlite3", "./books.db")
+	db, err := sql.Open("sqlite3", ".db-data/books.db")
 	if err != nil {
 		log.Fatal(err)
 	}
+	
 
 	// migrations initalization
 	sqlStmt := `create table if not exists migrations (id integer not null primary key autoincrement, name text unique);`

@@ -1,0 +1,3 @@
+# temp file to keep this folder
+# the database goes here and is mounted inside the docker continer
+# note that this folder is writable by all users on the system

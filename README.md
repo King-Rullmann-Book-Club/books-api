@@ -19,6 +19,25 @@ chmod +x ./start.sh
 ./start.sh
 ```
 
+Use the build script to build a static binary:
+
+```bash
+./build.sh
+```
+
+## Using Docker
+
+You can build, and then run the container with Docker. Docker compose is used to run the 
+docker container with the contents of `.db-data` mounted as a volume, and listening on 
+port `8000`. `--build` is used to ensure it rebuilds the container with an up-to-date binary.
+
+```bash
+sudo docker compose up -d --build
+
+# use down to shut it down again
+sudo docker compose down
+```
+
 ## Using NixOS
 
 There is a flake setup for this repo. To use it run the following command:
